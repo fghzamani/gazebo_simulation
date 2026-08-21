@@ -69,6 +69,10 @@ class LaunchArguments(LaunchArgumentsBase):
         'y_pose', default_value='0.0', description='Y position for robot spawn')
     yaw_pose: DeclareLaunchArgument = DeclareLaunchArgument(
         'yaw_pose', default_value='0.0', description='Yaw orientation for robot spawn')
+    map_path: DeclareLaunchArgument = DeclareLaunchArgument(
+        'map_path', default_value='', description='Path to custom 2D map.yaml file')
+    map: DeclareLaunchArgument = DeclareLaunchArgument(
+        'map', default_value='', description='Path to custom 2D map.yaml file (alias for map_path)')
 
 
 def private_navigation(context, *args, **kwargs):
@@ -198,7 +202,26 @@ def public_navigation(context, *args, **kwargs):
     pal_maps = get_package_share_directory('pal_maps')
     world_name = read_launch_argument('world_name', context)
     param_file = os.path.join(base_2dnav, 'config', 'nav_public_sim.yaml')
-    map_path = os.path.join(pal_maps, 'maps', world_name, 'map.yaml')
+
+    custom_map_path = read_launch_argument('map_path', context)
+    custom_map = read_launch_argument('map', context)
+    given_map = (custom_map_path or custom_map or "").strip()
+
+    gazebo_sim_maps = os.path.join(get_package_share_directory('gazebo_simulation'), 'maps')
+    possible_map_1 = os.path.join(gazebo_sim_maps, f"{world_name}.yaml")
+    possible_map_2 = os.path.join(gazebo_sim_maps, world_name, 'map.yaml')
+    pal_map = os.path.join(pal_maps, 'maps', world_name, 'map.yaml')
+
+    if given_map and os.path.exists(given_map):
+        map_path = given_map
+    elif os.path.exists(possible_map_1):
+        map_path = possible_map_1
+    elif os.path.exists(possible_map_2):
+        map_path = possible_map_2
+    else:
+        map_path = pal_map
+
+    print(f"[gazebo_with_navigation] Resolved 2D map path: '{map_path}' (exists: {os.path.exists(map_path)})")
 
     # Navigation
     nav2_bringup_launch = include_scoped_launch_py_description(
@@ -288,6 +311,7 @@ def declare_actions(
             "world_name":  launch_args.world_name,
             "model_paths": packages,
             "resource_paths": packages,
+            "extra_gazebo_args": "-s libgazebo_ros_state.so",
         })
 
     launch_description.add_action(gazebo)
