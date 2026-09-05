@@ -15,19 +15,19 @@
 
     <model name='outer_wall_west'>
       <static>1</static>
-      <pose>-6.1000 0.0000 1.0000 0 0 0</pose>
+      <pose>-5.9000 0.0000 1.0000 0 0 0</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry>
             <box>
-              <size>0.2000 32.2000 2.0000</size>
+              <size>0.2000 32.0000 2.0000</size>
             </box>
           </geometry>
         </collision>
         <visual name='visual'>
           <geometry>
             <box>
-              <size>0.2000 32.2000 2.0000</size>
+              <size>0.2000 32.0000 2.0000</size>
             </box>
           </geometry>
           <material>
@@ -42,19 +42,19 @@
 
     <model name='outer_wall_east'>
       <static>1</static>
-      <pose>6.1000 0.0000 1.0000 0 0 0</pose>
+      <pose>5.9000 0.0000 1.0000 0 0 0</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry>
             <box>
-              <size>0.2000 32.2000 2.0000</size>
+              <size>0.2000 32.0000 2.0000</size>
             </box>
           </geometry>
         </collision>
         <visual name='visual'>
           <geometry>
             <box>
-              <size>0.2000 32.2000 2.0000</size>
+              <size>0.2000 32.0000 2.0000</size>
             </box>
           </geometry>
           <material>
@@ -69,19 +69,19 @@
 
     <model name='outer_wall_south'>
       <static>1</static>
-      <pose>0.0000 -16.1000 1.0000 0 0 0</pose>
+      <pose>0.0000 -15.9000 1.0000 0 0 0</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry>
             <box>
-              <size>12.4000 0.2000 2.0000</size>
+              <size>12.0000 0.2000 2.0000</size>
             </box>
           </geometry>
         </collision>
         <visual name='visual'>
           <geometry>
             <box>
-              <size>12.4000 0.2000 2.0000</size>
+              <size>12.0000 0.2000 2.0000</size>
             </box>
           </geometry>
           <material>
@@ -96,19 +96,19 @@
 
     <model name='outer_wall_north'>
       <static>1</static>
-      <pose>0.0000 16.1000 1.0000 0 0 0</pose>
+      <pose>0.0000 15.9000 1.0000 0 0 0</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry>
             <box>
-              <size>12.4000 0.2000 2.0000</size>
+              <size>12.0000 0.2000 2.0000</size>
             </box>
           </geometry>
         </collision>
         <visual name='visual'>
           <geometry>
             <box>
-              <size>12.4000 0.2000 2.0000</size>
+              <size>12.0000 0.2000 2.0000</size>
             </box>
           </geometry>
           <material>

@@ -11,15 +11,26 @@ GAZEBO_SIM_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC_DIR = os.path.dirname(GAZEBO_SIM_DIR)
 PAL_GAZEBO_WORLDS_DIR = os.path.join(SRC_DIR, "pal_gazebo_worlds", "worlds")
 
+WORKSPACE_ROOT = os.path.dirname(SRC_DIR)
+
 WORLDS_DIRS = [
     os.path.join(GAZEBO_SIM_DIR, "worlds"),
-    PAL_GAZEBO_WORLDS_DIR
+    PAL_GAZEBO_WORLDS_DIR,
+    os.path.join(WORKSPACE_ROOT, "install", "gazebo_simulation", "share", "gazebo_simulation", "worlds"),
+    os.path.join(WORKSPACE_ROOT, "install", "pal_gazebo_worlds", "share", "pal_gazebo_worlds", "worlds"),
+    os.path.join(WORKSPACE_ROOT, "src", "install", "gazebo_simulation", "share", "gazebo_simulation", "worlds"),
+    os.path.join(WORKSPACE_ROOT, "src", "install", "pal_gazebo_worlds", "share", "pal_gazebo_worlds", "worlds"),
 ]
-MAPS_DIR = os.path.join(GAZEBO_SIM_DIR, "maps")
+MAPS_DIRS = [
+    os.path.join(GAZEBO_SIM_DIR, "maps"),
+    os.path.join(WORKSPACE_ROOT, "install", "gazebo_simulation", "share", "gazebo_simulation", "maps"),
+    os.path.join(WORKSPACE_ROOT, "src", "install", "gazebo_simulation", "share", "gazebo_simulation", "maps"),
+]
 
 for d in WORLDS_DIRS:
     os.makedirs(d, exist_ok=True)
-os.makedirs(MAPS_DIR, exist_ok=True)
+for d in MAPS_DIRS:
+    os.makedirs(d, exist_ok=True)
 
 
 def create_wall_box_sdf(name: str, x: float, y: float, z: float, dx: float, dy: float, dz: float = 2.0) -> str:
@@ -67,12 +78,13 @@ def generate_world_2():
     grid = [[255 for _ in range(width)] for _ in range(height)]
 
     # List of box obstacles (name, x, y, z, dx, dy, dz)
+    # Note: Outer walls are centered at +/-5.90m and +/-15.90m so their 0.20m thickness falls exactly inside [-6, 6] and [-16, 16]
     boxes = [
         # Outer perimeter walls
-        ("outer_wall_west",  -6.10,   0.00, 1.00, 0.20, 32.20, 2.00),
-        ("outer_wall_east",   6.10,   0.00, 1.00, 0.20, 32.20, 2.00),
-        ("outer_wall_south",  0.00, -16.10, 1.00, 12.40,  0.20, 2.00),
-        ("outer_wall_north",  0.00,  16.10, 1.00, 12.40,  0.20, 2.00),
+        ("outer_wall_west",  -5.90,   0.00, 1.00, 0.20, 32.00, 2.00),
+        ("outer_wall_east",   5.90,   0.00, 1.00, 0.20, 32.00, 2.00),
+        ("outer_wall_south",  0.00, -15.90, 1.00, 12.00,  0.20, 2.00),
+        ("outer_wall_north",  0.00,  15.90, 1.00, 12.00,  0.20, 2.00),
 
         # Zone 1 Doorway at y = -11.00 (2.60m gap at x=0)
         ("z1_door_west",     -3.65, -11.00, 1.00, 4.70, 0.20, 2.00),
@@ -122,18 +134,19 @@ def generate_world_2():
             for ix in range(ix_start, ix_end):
                 grid[iy][ix] = 0  # 0 represents occupied cell in PGM
 
-    # Write PGM and YAML
-    pgm_path = os.path.join(MAPS_DIR, f"{map_name}.pgm")
-    yaml_path = os.path.join(MAPS_DIR, f"{map_name}.yaml")
+    # Ensure perimeter border cells are explicitly occupied walls
+    for ix in range(width):
+        grid[0][ix] = 0
+        grid[1][ix] = 0
+        grid[height - 1][ix] = 0
+        grid[height - 2][ix] = 0
+    for iy in range(height):
+        grid[iy][0] = 0
+        grid[iy][1] = 0
+        grid[iy][width - 1] = 0
+        grid[iy][width - 2] = 0
 
-    with open(pgm_path, "w") as f:
-        f.write("P2\n")
-        f.write(f"# Map generated for {map_name}\n")
-        f.write(f"{width} {height}\n")
-        f.write("255\n")
-        for row in reversed(grid):
-            f.write(" ".join(str(val) for val in row) + "\n")
-
+    # Write PGM and YAML to all registered maps directories
     yaml_content = (
         f"image: {map_name}.pgm\n"
         f"mode: trinary\n"
@@ -143,10 +156,23 @@ def generate_world_2():
         f"occupied_thresh: 0.65\n"
         f"free_thresh: 0.25\n"
     )
-    with open(yaml_path, "w") as f:
-        f.write(yaml_content)
 
-    print(f"Generated 2D map: {yaml_path} ({width}x{height} px, res={res}m/px)")
+    for mdir in MAPS_DIRS:
+        pgm_path = os.path.join(mdir, f"{map_name}.pgm")
+        yaml_path = os.path.join(mdir, f"{map_name}.yaml")
+
+        with open(pgm_path, "w") as f:
+            f.write("P2\n")
+            f.write(f"# Map generated for {map_name}\n")
+            f.write(f"{width} {height}\n")
+            f.write("255\n")
+            for row in reversed(grid):
+                f.write(" ".join(str(val) for val in row) + "\n")
+
+        with open(yaml_path, "w") as f:
+            f.write(yaml_content)
+
+        print(f"Generated 2D map: {yaml_path} ({width}x{height} px, res={res}m/px)")
 
     # Build SDF string
     models_sdf = "\n".join(create_wall_box_sdf(b[0], b[1], b[2], b[3], b[4], b[5], b[6]) for b in boxes)
