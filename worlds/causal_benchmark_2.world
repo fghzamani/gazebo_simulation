@@ -744,7 +744,7 @@
 
     <model name='z4_corridor_west'>
       <static>1</static>
-      <pose>-1.6500 0.5000 1.0000 0 0 0</pose>
+      <pose>-0.6500 0.5000 1.0000 0 0 0</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry>
@@ -771,7 +771,7 @@
 
     <model name='z4_corridor_east'>
       <static>1</static>
-      <pose>-0.3500 0.5000 1.0000 0 0 0</pose>
+      <pose>0.6500 0.5000 1.0000 0 0 0</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry>
@@ -798,19 +798,19 @@
 
     <model name='z4_block_west'>
       <static>1</static>
-      <pose>-3.9250 0.5000 1.0000 0 0 0</pose>
+      <pose>-3.2750 0.5000 1.0000 0 0 0</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry>
             <box>
-              <size>4.3500 0.2000 2.0000</size>
+              <size>5.0500 0.2000 2.0000</size>
             </box>
           </geometry>
         </collision>
         <visual name='visual'>
           <geometry>
             <box>
-              <size>4.3500 0.2000 2.0000</size>
+              <size>5.0500 0.2000 2.0000</size>
             </box>
           </geometry>
           <material>
@@ -825,19 +825,19 @@
 
     <model name='z4_block_east'>
       <static>1</static>
-      <pose>2.7250 0.5000 1.0000 0 0 0</pose>
+      <pose>3.2750 0.5000 1.0000 0 0 0</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry>
             <box>
-              <size>5.9500 0.2000 2.0000</size>
+              <size>5.0500 0.2000 2.0000</size>
             </box>
           </geometry>
         </collision>
         <visual name='visual'>
           <geometry>
             <box>
-              <size>5.9500 0.2000 2.0000</size>
+              <size>5.0500 0.2000 2.0000</size>
             </box>
           </geometry>
           <material>
@@ -852,19 +852,19 @@
 
     <model name='z5_door_west'>
       <static>1</static>
-      <pose>-3.5500 3.0000 1.0000 0 0 0</pose>
+      <pose>-3.4500 3.0000 1.0000 0 0 0</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry>
             <box>
-              <size>4.9000 0.2000 2.0000</size>
+              <size>4.7000 0.2000 2.0000</size>
             </box>
           </geometry>
         </collision>
         <visual name='visual'>
           <geometry>
             <box>
-              <size>4.9000 0.2000 2.0000</size>
+              <size>4.7000 0.2000 2.0000</size>
             </box>
           </geometry>
           <material>
@@ -879,19 +879,19 @@
 
     <model name='z5_door_east'>
       <static>1</static>
-      <pose>3.5500 3.0000 1.0000 0 0 0</pose>
+      <pose>3.4500 3.0000 1.0000 0 0 0</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry>
             <box>
-              <size>4.9000 0.2000 2.0000</size>
+              <size>4.7000 0.2000 2.0000</size>
             </box>
           </geometry>
         </collision>
         <visual name='visual'>
           <geometry>
             <box>
-              <size>4.9000 0.2000 2.0000</size>
+              <size>4.7000 0.2000 2.0000</size>
             </box>
           </geometry>
           <material>

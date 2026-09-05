@@ -116,15 +116,15 @@ def generate_world_2():
         ("z3_clutter_14",    1.80, -3.00, 0.60, 0.40, 0.40, 1.20),
         ("z3_clutter_15",    3.80, -2.60, 0.60, 0.30, 0.30, 1.20),
 
-        # Zone 4 (Standard Straight Corridor, y in [-2, 3], gap = 1.10m)
-        ("z4_corridor_west", -1.65, 0.50, 1.00, 0.20, 5.00, 2.00),
-        ("z4_corridor_east", -0.35, 0.50, 1.00, 0.20, 5.00, 2.00),
-        ("z4_block_west",    -3.925, 0.50, 1.00, 4.35, 0.20, 2.00),
-        ("z4_block_east",     2.725, 0.50, 1.00, 5.95, 0.20, 2.00),
+        # Zone 4 (Standard Straight Corridor, y in [-2, 3], gap = 1.10m centered at x=0.0)
+        ("z4_corridor_west", -0.65, 0.50, 1.00, 0.20, 5.00, 2.00),
+        ("z4_corridor_east",  0.65, 0.50, 1.00, 0.20, 5.00, 2.00),
+        ("z4_block_west",   -3.275, 0.50, 1.00, 5.05, 0.20, 2.00),
+        ("z4_block_east",    3.275, 0.50, 1.00, 5.05, 0.20, 2.00),
 
-        # Zone 5 (Open Transport Corridor Entry, y = 3.00, 2.20m gap, Band B3)
-        ("z5_door_west",    -3.55,  3.00, 1.00, 4.90, 0.20, 2.00),
-        ("z5_door_east",     3.55,  3.00, 1.00, 4.90, 0.20, 2.00),
+        # Zone 5 (Open Transport Corridor Entry, y = 3.00, 2.20m gap centered at x=0.0, Band B3)
+        ("z5_door_west",    -3.45,  3.00, 1.00, 4.70, 0.20, 2.00),
+        ("z5_door_east",     3.45,  3.00, 1.00, 4.70, 0.20, 2.00),
 
         # Zone 6 (Goal Room Clutter, y in [11, 16])
         ("z6_cab_west",     -4.20, 14.60, 0.50, 1.20, 0.80, 1.00),
