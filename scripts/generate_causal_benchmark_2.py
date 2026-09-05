@@ -189,20 +189,31 @@ def generate_world_2():
     # Build SDF string
     models_sdf = "\n".join(create_wall_box_sdf(b[0], b[1], b[2], b[3], b[4], b[5], b[6]) for b in boxes)
 
-    world_sdf = f"""<?xml version="1.0" ?>
-<sdf version="1.6">
-  <world name="causal_benchmark_2">
+    world_sdf = f"""<sdf version='1.7'>
+  <world name='causal_benchmark_2'>
+    <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
+      <ros>
+        <namespace>/gazebo</namespace>
+      </ros>
+      <update_rate>50.0</update_rate>
+    </plugin>
+    <plugin name="collision_monitor" filename="libcollision_monitor.so">
+      <ros>
+        <namespace>/gazebo</namespace>
+      </ros>
+      <robot_name>tiago</robot_name>
+      <ignore_models>ground_plane</ignore_models>
+      <force_threshold>1.0</force_threshold>
+      <publish_rate>50</publish_rate>
+    </plugin>
+
+    <!-- Light & Ground -->
     <include>
       <uri>model://sun</uri>
     </include>
     <include>
       <uri>model://ground_plane</uri>
     </include>
-    <physics type="ode">
-      <max_step_size>0.001</max_step_size>
-      <real_time_factor>1</real_time_factor>
-      <real_time_update_rate>1000</real_time_update_rate>
-    </physics>
 {models_sdf}
   </world>
 </sdf>
