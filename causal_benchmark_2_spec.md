@@ -262,7 +262,7 @@ and it is what makes the context-dependence claim testable.
 |---|---|---|
 | Mission timeout | **180 s** | Long enough for a Z1→Z6 traverse at moderate speed (~34 m route at 0.4 m/s ≈ 85 s plus recovery), short enough that holding 30% throughout fails. Fix this before running and record it in every trial JSON. |
 | Pose pool | 30 start–goal pairs | Stratified: 10 pairs crossing ≥ 4 zones, 10 crossing 2–3, 10 within-zone. Report the stratum with each result. |
-| Repeats | **3 per (strategy, pair)** | Still absent from both campaigns. Without it there is no within-cell variance and the paired tests are the only inference available. |
+| Repeats | **3 per (strategy, pair)** | Without it there is no within-cell variance and the paired tests are the only inference available. |
 | Goal clearance in sampler | ≥ 0.70 m | Existing `--goal-clearance` default. Verify no sampled goal lands in Z2 or Z4 corridors, where the tolerance cannot be met. |
 | Fixed critics | unchanged | GoalCritic 20, GoalAngleCritic 10, PreferForward threshold 1.5, identical across strategies and across both worlds. |
 

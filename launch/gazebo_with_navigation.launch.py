@@ -66,9 +66,9 @@ class LaunchArguments(LaunchArgumentsBase):
     x_pose: DeclareLaunchArgument = DeclareLaunchArgument(
         'x_pose', default_value='0.0', description='X position for robot spawn')
     y_pose: DeclareLaunchArgument = DeclareLaunchArgument(
-        'y_pose', default_value='0.0', description='Y position for robot spawn')
+        'y_pose', default_value='-8.5', description='Y position for robot spawn')
     yaw_pose: DeclareLaunchArgument = DeclareLaunchArgument(
-        'yaw_pose', default_value='0.0', description='Yaw orientation for robot spawn')
+        'yaw_pose', default_value='1.5708', description='Yaw orientation for robot spawn')
     map_path: DeclareLaunchArgument = DeclareLaunchArgument(
         'map_path', default_value='', description='Path to custom 2D map.yaml file')
     map: DeclareLaunchArgument = DeclareLaunchArgument(
@@ -200,7 +200,8 @@ def public_navigation(context, *args, **kwargs):
     base_type = read_launch_argument('base_type', context)
     base_2dnav = get_package_share_directory(base_type + '_2dnav')
     pal_maps = get_package_share_directory('pal_maps')
-    world_name = read_launch_argument('world_name', context)
+    world_name_raw = read_launch_argument('world_name', context)
+    world_basename = os.path.splitext(os.path.basename(world_name_raw))[0]
     param_file = os.path.join(base_2dnav, 'config', 'nav_public_sim.yaml')
 
     custom_map_path = read_launch_argument('map_path', context)
@@ -208,9 +209,9 @@ def public_navigation(context, *args, **kwargs):
     given_map = (custom_map_path or custom_map or "").strip()
 
     gazebo_sim_maps = os.path.join(get_package_share_directory('gazebo_simulation'), 'maps')
-    possible_map_1 = os.path.join(gazebo_sim_maps, f"{world_name}.yaml")
-    possible_map_2 = os.path.join(gazebo_sim_maps, world_name, 'map.yaml')
-    pal_map = os.path.join(pal_maps, 'maps', world_name, 'map.yaml')
+    possible_map_1 = os.path.join(gazebo_sim_maps, f"{world_basename}.yaml")
+    possible_map_2 = os.path.join(gazebo_sim_maps, world_basename, 'map.yaml')
+    pal_map = os.path.join(pal_maps, 'maps', world_basename, 'map.yaml')
 
     if given_map and os.path.exists(given_map):
         map_path = given_map
@@ -230,6 +231,7 @@ def public_navigation(context, *args, **kwargs):
         launch_arguments={
             'params_file': param_file,
             'use_sim_time': LaunchConfiguration('use_sim_time'),
+            'autostart': 'True',
         }
     )
     actions.append(nav2_bringup_launch)
@@ -242,6 +244,7 @@ def public_navigation(context, *args, **kwargs):
             'params_file': param_file,
             'map': map_path,
             'use_sim_time': LaunchConfiguration('use_sim_time'),
+            'autostart': 'True',
         },
         condition=UnlessCondition(LaunchConfiguration('slam')),
     )
@@ -349,20 +352,6 @@ def declare_actions(
 
     launch_description.add_action(move_group)
 
-    robot_spawn = Node(package='gazebo_ros',
-        executable='spawn_entity.py',
-        arguments=[
-            '-entity',        robot_name,
-            '-topic',         'robot_description',
-            '-x',             LaunchConfiguration('x_pose'),
-            '-y',             LaunchConfiguration('y_pose'),
-            '-Y',             LaunchConfiguration('yaw_pose'),   # capital Y = yaw
-        ],
-        output='screen'
-    )
-
-    launch_description.add_action(robot_spawn)
-
     tiago_bringup = include_scoped_launch_py_description(
         pkg_name='tiago_bringup', paths=['launch', 'tiago_bringup.launch.py'],
         launch_arguments={
@@ -381,6 +370,20 @@ def declare_actions(
     )
 
     launch_description.add_action(tiago_bringup)
+
+    robot_spawn = Node(package='gazebo_ros',
+        executable='spawn_entity.py',
+        arguments=[
+            '-entity',        robot_name,
+            '-topic',         'robot_description',
+            '-x',             LaunchConfiguration('x_pose'),
+            '-y',             LaunchConfiguration('y_pose'),
+            '-Y',             LaunchConfiguration('yaw_pose'),   # capital Y = yaw
+        ],
+        output='screen'
+    )
+
+    launch_description.add_action(robot_spawn)
 
     tuck_arm = Node(package='tiago_gazebo',
                     executable='tuck_arm.py',

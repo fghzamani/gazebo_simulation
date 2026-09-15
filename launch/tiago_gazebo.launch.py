@@ -54,9 +54,9 @@ class LaunchArguments(LaunchArgumentsBase):
     x_pose: DeclareLaunchArgument = DeclareLaunchArgument(
         'x_pose', default_value='0.0', description='X position for robot spawn')
     y_pose: DeclareLaunchArgument = DeclareLaunchArgument(
-        'y_pose', default_value='0.0', description='Y position for robot spawn')
+        'y_pose', default_value='-8.5', description='Y position for robot spawn')
     yaw_pose: DeclareLaunchArgument = DeclareLaunchArgument(
-        'yaw_pose', default_value='0.0', description='Yaw orientation for robot spawn')
+        'yaw_pose', default_value='1.5708', description='Yaw orientation for robot spawn')
 
 def generate_launch_description():
 
@@ -121,21 +121,6 @@ def declare_actions(
 
     launch_description.add_action(move_group)
 
-    robot_spawn = Node(package='gazebo_ros',
-        executable='spawn_entity.py',
-        arguments=[
-            '-entity',        robot_name,
-            '-topic',         'robot_description',
-            '-x',             LaunchConfiguration('x_pose'),
-            '-y',             LaunchConfiguration('y_pose'),
-            '-Y',             LaunchConfiguration('yaw_pose'),   # capital Y = yaw
-        ],
-        output='screen'
-    )  
-
-
-    launch_description.add_action(robot_spawn)
-
     tiago_bringup = include_scoped_launch_py_description(
         pkg_name='tiago_bringup', paths=['launch', 'tiago_bringup.launch.py'],
         launch_arguments={
@@ -153,6 +138,20 @@ def declare_actions(
     )
 
     launch_description.add_action(tiago_bringup)
+
+    robot_spawn = Node(package='gazebo_ros',
+        executable='spawn_entity.py',
+        arguments=[
+            '-entity',        robot_name,
+            '-topic',         'robot_description',
+            '-x',             LaunchConfiguration('x_pose'),
+            '-y',             LaunchConfiguration('y_pose'),
+            '-Y',             LaunchConfiguration('yaw_pose'),   # capital Y = yaw
+        ],
+        output='screen'
+    )  
+
+    launch_description.add_action(robot_spawn)
 
     tuck_arm = Node(package='tiago_gazebo',
                     executable='tuck_arm.py',
